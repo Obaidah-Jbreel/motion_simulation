@@ -1,11 +1,24 @@
+/* 
+    this is the main source code 
+    what's included for the c++ course : 
+      oop 
+      arrays
+      loops and nested loops 
+      cmath 
+      pointers 
+      vectors
+
+*/
 #include "canon.hpp"
 #include "physics.hpp"
+
 #include "cmath"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
 
-class Label : public sf::Text { // this used to prevent code repeat
+// I made this class to optimize the code , since it was repeated .
+class Label : public sf::Text { 
 public:
   Label(std::string text = "Text",
         sf::Vector2f position = sf::Vector2f(0.f, 0.f))
@@ -24,7 +37,7 @@ float windowS[2] = {1920.0f, 1080.0f};
 // (relative to image real height) . width and height is relative to origin dim
 // of the image .
 float canonD[4] = {50.f, windowS[1], .5f, .5f}; //.5 * 512 = 256 pixels
-//
+// Canon ball Constants .
 const sf::Vector2f ballInitPosition = sf::Vector2f(225.f, windowS[1] - 280.f);
 const int MAX_CANON_BALLS = 5;
 CanonBall canonBalls[MAX_CANON_BALLS];
@@ -33,9 +46,12 @@ CanonBall canonBalls[MAX_CANON_BALLS];
 const sf::Time FIRE_DELAY = sf::seconds(1.f);
 
 int main(int argc, char *argv[]) {
+
   float initVelocity = 130.f;
+  // Main textures and fonts 
   sf::Texture head, base, ballTexture, backgroundT;
   sf::Font lemonFont;
+  // Reposition the canon to make it relative
   canonD[0] = 512 * canonD[2];
   canonD[1] = windowS[1] - (canonD[3] * 512);
 

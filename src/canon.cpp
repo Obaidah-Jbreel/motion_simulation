@@ -1,3 +1,12 @@
+/* 
+    this source code meant to be implementation file for canon.hpp
+    what's included for the c++ course: 
+      vectors 
+      loops and nested loops 
+      cmath 
+      pointers 
+
+*/
 #include "canon.hpp"
 #include <vector>
 #include "iostream"
