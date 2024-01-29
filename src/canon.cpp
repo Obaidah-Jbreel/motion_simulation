@@ -1,12 +1,4 @@
-/* 
-    this source code meant to be implementation file for canon.hpp
-    what's included for the c++ course: 
-      vectors 
-      loops and nested loops 
-      cmath 
-      pointers 
 
-*/
 #include "canon.hpp"
 #include <vector>
 #include "iostream"
@@ -24,11 +16,10 @@ void CanonBall::updateBallPosition() {
   for (CanonBall *canonBall : CanonBalls) {
     if (canonBall->isFired && canonBall->isMoving) {
         float deltaTime = canonBall->time.getElapsedTime().asSeconds();
-        float t = deltaTime; 
-        float x = canonBall->velocity.x * t ; 
-        float y = canonBall->velocity.y * t - 0.5 * 9.8 * t * t ; 
+        float t = deltaTime;
+        sf::Vector2f currentPosition = projectile::calcCurrentPosition(t,canonBall->velocity);
 
-        canonBall->setPosition(min(canonBall->initPosition.x + x,canonBall->finalPosition.x) ,min(canonBall->initPosition.y - y,canonBall->initPosition.y)); 
+        canonBall->setPosition(min(canonBall->initPosition.x + currentPosition.x,canonBall->finalPosition.x) ,min(canonBall->initPosition.y - currentPosition.y,canonBall->initPosition.y)); 
 
     }
   }
@@ -43,13 +34,13 @@ CanonBall::CanonBall(float radius, std::size_t pointCount) : sf::CircleShape(rad
 }
 
 void CanonBall::fire(float angle = 25.f,float velocity = 100.f) {
+
   sf::Vector2f currentPos = this->getPosition();
   std::vector <sf::Vector2f> data = projectile::calcProjectileCord(abs(angle), velocity);
   sf::Vector2f finalPos = data[0]; 
-  cout << finalPos.x << "    " << finalPos.y << endl; 
+
   finalPos.x += this->initPosition.x ;
   finalPos.y = currentPos.y - finalPos.y;
-  cout << finalPos.x << "    " << finalPos.y << endl; 
 
   this->velocity = data[1];
   this->finalPosition = finalPos;

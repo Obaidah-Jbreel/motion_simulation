@@ -3,5 +3,5 @@ cmake . -B build &&
 	make &&
 	ls -la ./bin &&
 	cd bin &&
-	sudo ./MotionSimulator &&
+	sudo ./MotionSimulator $1 &&
 	cd ../

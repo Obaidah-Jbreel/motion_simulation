@@ -1,4 +1,4 @@
-// canon.hpp
+
 #ifndef CANON_HPP
 #define CANON_HPP
 

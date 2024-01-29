@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/MotionSimulator.dir/src/canon.cpp.o CMakeFiles/MotionSimulator.dir/src/main.cpp.o -o bin/MotionSimulator  -lsfml-graphics 

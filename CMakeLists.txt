@@ -7,13 +7,7 @@ project(MotionSimulator VERSION 1.0
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
-include(FetchContent)
-FetchContent_Declare(SFML
-    GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG 2.6.x
-    )
-FetchContent_MakeAvailable(SFML)
-
+find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 
 file(GLOB SOURCE_FILES src/*.cpp)
 
@@ -21,7 +15,8 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE includes)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics)
+target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics sfml-window sfml-system)
+
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 if(WIN32)

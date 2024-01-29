@@ -1,17 +1,8 @@
-/* 
-    this is the main source code 
-    what's included for the c++ course : 
-      oop 
-      arrays
-      loops and nested loops 
-      cmath 
-      pointers 
-      vectors
-
-*/
 #include "canon.hpp"
 #include "physics.hpp"
 
+#include "stdlib.h"
+#include "cstdio"
 #include "cmath"
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -38,16 +29,19 @@ float windowS[2] = {1920.0f, 1080.0f};
 // of the image .
 float canonD[4] = {50.f, windowS[1], .5f, .5f}; //.5 * 512 = 256 pixels
 // Canon ball Constants .
-const sf::Vector2f ballInitPosition = sf::Vector2f(225.f, windowS[1] - 280.f);
+const sf::Vector2f ballInitPosition = sf::Vector2f(225.f, windowS[1] - 275.f);
 const int MAX_CANON_BALLS = 5;
 CanonBall canonBalls[MAX_CANON_BALLS];
 
 // Delay between fire balls
 const sf::Time FIRE_DELAY = sf::seconds(1.f);
 
-int main(int argc, char *argv[]) {
-
-  float initVelocity = 130.f;
+int main(int argc, char *input[]) {
+  float initVelocity = 100.f;
+  if (argc > 1) 
+  {
+    initVelocity = atof(input[1]) * 10 ;
+  }
   // Main textures and fonts 
   sf::Texture head, base, ballTexture, backgroundT;
   sf::Font lemonFont;
@@ -80,7 +74,7 @@ int main(int argc, char *argv[]) {
     return 1; //*/
   // Init the ammo for the canon ball . 
   for (int i = 0; i < MAX_CANON_BALLS; i++) {
-    canonBalls[i] = CanonBall(25.f, 1024 * 10);
+    canonBalls[i] = CanonBall(20.f, 1024 * 10);
     canonBalls[i].setPosition(ballInitPosition);
     canonBalls[i].setTexture(&ballTexture);
     canonBalls[i].initPosition = ballInitPosition;
@@ -90,13 +84,14 @@ int main(int argc, char *argv[]) {
   sf::Sprite baseS(base);
   sf::Sprite backgroundS(backgroundT);
   // init information labels 
+  std::vector <sf::Vector2f> initData = projectile::calcProjectileCord(std::abs(angle), initVelocity);
   Label anglel("Angle :" + std::to_string((int)-angle), sf::Vector2f(0.f, 0.f));
   anglel.setFont(lemonFont);
-  Label initVelocityl("Init Velocity : " + std::to_string((int)initVelocity / 10) + "m/s", sf::Vector2f(150.f, 0.f));
+  Label initVelocityl("Init Velocity : " + std::to_string( static_cast<int>(initVelocity)/ 10 )  + "m/s", sf::Vector2f(150.f, 0.f));
   initVelocityl.setFont(lemonFont);
-  Label rangel("Range : 765m", sf::Vector2f(450.f, 0));
+  Label rangel("Range : "+ std::to_string(static_cast<int>(initData[0].x) /10) + "m", sf::Vector2f(500.f, 0));
   rangel.setFont(lemonFont);
-  Label apexl("Apex : 90m ", sf::Vector2f(720.f, 0.f));
+  Label apexl("Apex : " + std::to_string(static_cast<int>(initData[0].y) /10) + "m" , sf::Vector2f(720.f, 0.f));
   apexl.setFont(lemonFont);
   // RENDER LOOP (main loop) .
   while (window.isOpen()) {
@@ -121,10 +116,11 @@ int main(int argc, char *argv[]) {
       angle = atan2(dY, dX) * (180.f / M_PI);
       angle = (-angle < 0.f) ? 0.f : angle;
       angle = (-angle > 90.f) ? -90.f : angle;
-      anglel.setString("Angle : " +std::to_string((angle < 0.f) ? (int)-angle : (int)(angle + 180.f)) + "");
-      std::vector <sf::Vector2f> data = projectile::calcProjectileCord(std::abs(angle), initVelocity);
-      rangel.setString("Range = " + std::to_string((int)data[0].x) + "m");
-      apexl.setString("Apex = " + std::to_string((int)data[0].y) + "m");
+      anglel.setString("Angle : " + std::to_string((angle < 0.f) ? (int)-angle : (int) (angle + 180.f)) + "");
+      // Update Information labels text .
+      initData = projectile::calcProjectileCord(std::abs(angle), initVelocity);
+      rangel.setString("Range = " + std::to_string(static_cast<int>(initData[0].x) /10) + "m");
+      apexl.setString("Apex = " + std::to_string(static_cast<int>(initData[0].y) /10) + "m");
     }
     // Update the head rotation .
     headS.setRotation(angle);
@@ -134,14 +130,10 @@ int main(int argc, char *argv[]) {
 
     // Canon ball
     for (int i = 0; i < MAX_CANON_BALLS; i++) {
-      if (!canonBalls[i].isMoving && sf::Mouse::isButtonPressed(sf::Mouse::Left) && currentClock.getElapsedTime() >= FIRE_DELAY) 
+      if (!canonBalls[i].isMoving && sf::Mouse::isButtonPressed(sf::Mouse::Left) && window.hasFocus() && currentClock.getElapsedTime() >= FIRE_DELAY) 
       {
         canonBalls[i].fire(-angle, initVelocity);
         currentClock.restart();
-      } else if (currentClock.getElapsedTime() < FIRE_DELAY) {
-        //        std::cout << "[Delay-System] : Wait 1 sec .."
-        //                 << currentClock.getElapsedTime().asSeconds() <<
-        //                 std::endl;
       }
       window.draw((canonBalls[i]));
     }
