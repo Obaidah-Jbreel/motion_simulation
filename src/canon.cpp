@@ -29,7 +29,7 @@ CanonBall::CanonBall() : sf::CircleShape() {
   CanonBalls.emplace_back(this);
 }
 
-CanonBall::CanonBall(float radius, std::size_t pointCount) : sf::CircleShape(radius, pointCount) {
+CanonBall::CanonBall(float radius, float pointCount) : sf::CircleShape(radius, pointCount) {
   CanonBalls.emplace_back(this);
 }
 
