@@ -22,7 +22,7 @@ public:
   void fire(float angle, float velocity);
 
   CanonBall();
-  CanonBall(float radius, u_long pointCount = 30.f);
+  CanonBall(float radius, float pointCount = 30.f);
 
   static void updateBallPosition();
 };
