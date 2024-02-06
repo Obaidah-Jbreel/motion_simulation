@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+  cmake_minimum_required(VERSION 3.16)
 project(MotionSimulator VERSION 1.0
   LANGUAGES CXX
   DESCRIPTION "Simple motion simulation"
@@ -7,17 +7,17 @@ project(MotionSimulator VERSION 1.0
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
-find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
+find_package(SFML COMPONENTS graphics window system REQUIRED)
 
 file(GLOB SOURCE_FILES src/*.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE includes)
+target_include_directories(${PROJECT_NAME} PRIVATE headers)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics sfml-window sfml-system)
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+#target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 if(WIN32)
   add_custom_command(

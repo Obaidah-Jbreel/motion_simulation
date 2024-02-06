@@ -1,12 +1,13 @@
 #include "canon.hpp"
 #include "physics.hpp"
 
-#include "stdlib.h"
-#include "cstdio"
-#include "cmath"
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/PrimitiveType.hpp>
+#include <SFML/Graphics/Vertex.hpp>
+#include <array>
 #include <iostream>
-#include <string>
+#include "stdlib.h"
+#include "cmath"
 
 // I made this class to optimize the code , since it was repeated .
 class Label : public sf::Text { 
@@ -38,14 +39,23 @@ const sf::Time FIRE_DELAY = sf::seconds(1.f);
 
 int main(int argc, char *input[]) {
   float initVelocity = 100.f;
-  if (argc > 1) 
-  {
-    initVelocity = atof(input[1]) * 10 ;
+  float angle = -25.f;
+  std::cout << argc << endl;
+  switch (argc) {
+    case 2 : 
+        initVelocity = atof(input[1]) * 10 ;
+        break;
+    case 3 : 
+        angle = -atof(input[2]);
+        break;
+    
   }
   // Main textures and fonts 
   sf::Texture head, base, ballTexture, backgroundT;
   sf::Font lemonFont;
-  // Reposition the canon to make it relative
+  // Target Line . 
+  sf::VertexArray targetLine(sf::LinesStrip);
+  // caluclate canon cords based on its dimensions;  
   canonD[0] = 512 * canonD[2];
   canonD[1] = windowS[1] - (canonD[3] * 512);
 
@@ -53,7 +63,6 @@ int main(int argc, char *input[]) {
   window.setFramerateLimit(60);
   sf::Clock currentClock;
 
-  float angle = -25.f;
 
   // Check if textures loaded .
   if (!head.loadFromFile("./head.png")) {
@@ -84,7 +93,7 @@ int main(int argc, char *input[]) {
   sf::Sprite baseS(base);
   sf::Sprite backgroundS(backgroundT);
   // init information labels 
-  std::vector <sf::Vector2f> initData = projectile::calcProjectileCord(std::abs(angle), initVelocity);
+  std::vector <sf::Vector2f> initData = projectile::calcProjectileProperties(std::abs(angle), initVelocity);
   Label anglel("Angle :" + std::to_string((int)-angle), sf::Vector2f(0.f, 0.f));
   anglel.setFont(lemonFont);
   Label initVelocityl("Init Velocity : " + std::to_string( static_cast<int>(initVelocity)/ 10 )  + "m/s", sf::Vector2f(150.f, 0.f));
@@ -114,11 +123,11 @@ int main(int argc, char *input[]) {
       sf::Vector2i mousePos = sf::Mouse::getPosition(window);
       float dX = mousePos.x - ballInitPosition.x,dY = mousePos.y - ballInitPosition.y;
       angle = atan2(dY, dX) * (180.f / M_PI);
-      angle = (-angle < 0.f) ? 0.f : angle;
+      angle = (-angle < 20.f) ? -20.f : angle;
       angle = (-angle > 90.f) ? -90.f : angle;
       anglel.setString("Angle : " + std::to_string((angle < 0.f) ? (int)-angle : (int) (angle + 180.f)) + "");
       // Update Information labels text .
-      initData = projectile::calcProjectileCord(std::abs(angle), initVelocity);
+      initData = projectile::calcProjectileProperties(std::abs(angle), initVelocity);
       rangel.setString("Range = " + std::to_string(static_cast<int>(initData[0].x) /10) + "m");
       apexl.setString("Apex = " + std::to_string(static_cast<int>(initData[0].y) /10) + "m");
     }
@@ -128,6 +137,29 @@ int main(int argc, char *input[]) {
     // DRAWING SECTION .
     window.draw(backgroundS);
 
+
+    // Create target line based on angle . 
+    float timeOfFlight = initData[2].x; 
+    targetLine.clear();
+    while (timeOfFlight > 0)  
+    {
+      sf::Vector2f position = projectile::calcCurrentPosition(timeOfFlight,initData[1]);
+      position.x += ballInitPosition.x + 20; 
+      position.y = ballInitPosition.y - position.y + 20;
+      targetLine.append(sf::Vertex(position));
+      timeOfFlight = timeOfFlight - 0.1;
+      std::cout << position.x << "  ----  " << position.y << std::endl;  
+    }
+
+    window.draw(headS);
+    window.draw(baseS);
+    window.draw(anglel);
+    window.draw(rangel);
+    window.draw(apexl);
+    window.draw(initVelocityl);
+    window.draw(targetLine);
+
+    CanonBall::updateBallPosition();
     // Canon ball
     for (int i = 0; i < MAX_CANON_BALLS; i++) {
       if (!canonBalls[i].isMoving && sf::Mouse::isButtonPressed(sf::Mouse::Left) && window.hasFocus() && currentClock.getElapsedTime() >= FIRE_DELAY) 
@@ -137,16 +169,6 @@ int main(int argc, char *input[]) {
       }
       window.draw((canonBalls[i]));
     }
-
-    window.draw(headS);
-    window.draw(baseS);
-    window.draw(anglel);
-    window.draw(rangel);
-    window.draw(apexl);
-    window.draw(initVelocityl);
-
-    CanonBall::updateBallPosition();
-
     window.display();
   }
 }

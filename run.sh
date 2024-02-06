@@ -1,7 +1,6 @@
-cmake . -B build &&
+cmake . -B build  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON &&
 	cd build &&
 	make &&
-	ls -la ./bin &&
 	cd bin &&
-	sudo ./MotionSimulator $1 &&
+	sudo ./MotionSimulator $1 $2 &&
 	cd ../

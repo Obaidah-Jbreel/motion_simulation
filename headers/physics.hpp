@@ -2,15 +2,15 @@
 #include <vector>
 #include "cmath"
 
+#define PI 3.14159265359
+
 using namespace std;
-
 const float g = 9.8f;
-
 class projectile {
   public :
-  static std::vector<sf::Vector2f> calcProjectileCord(float angle = 25, float initVelocity = 100.f) 
+  static std::vector<sf::Vector2f>  calcProjectileProperties(float angle = 25, float initVelocity = 100.f) 
   {
-      float thetaRad = angle * (M_PI / 180.f); // 25 
+      float thetaRad = angle * (PI / 180.f); // 25 
       float initialVelocityX = initVelocity * cos(thetaRad); // 90
       float initialVelocityY = initVelocity * sin(thetaRad); // 42
     
@@ -23,12 +23,16 @@ class projectile {
       // Calculate the range (x = Vxi * T)
       float range = initialVelocityX * timeOfFlight; // 765
 
-      std::vector<sf::Vector2f> cords{sf::Vector2f(range, apexHeight),sf::Vector2f(initialVelocityX,initialVelocityY)};
+      std::vector<sf::Vector2f> cords{
+        sf::Vector2f(range, apexHeight),
+        sf::Vector2f(initialVelocityX,initialVelocityY),
+        sf::Vector2f(timeOfFlight,0)
+      };
       return cords;
   }
   static sf::Vector2f calcCurrentPosition(float currentTime = 0.f,sf::Vector2f velocity = sf::Vector2f(0.f,0.f))
   {
-    
+
         float x = velocity.x * currentTime ; 
         float y = velocity.y * currentTime - 0.5 * g * currentTime * currentTime ;
 
