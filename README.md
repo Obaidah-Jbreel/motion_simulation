@@ -9,6 +9,6 @@ Building from source  :
 In order to build the codebase in your system you have to make sure you have the essential tools for building cmake projects . 
 # *Required tools For Building :* 
 * [CMAKE](https://cmake.org/) Cross-platform building tool .
-* C++ Compiler like mingw or clang .
+* [MINGW](https://www.mingw-w64.org/) or [CLANG](https://clang.llvm.org/) C/C++ Compiler and linker .
 * [SFML Library](https://www.sfml-dev.org/) -- UI library . 
 * [VCPKG](https://vcpkg.io/en/) -- For windows .
