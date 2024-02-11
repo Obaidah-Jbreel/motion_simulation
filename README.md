@@ -7,8 +7,8 @@ You can try the simulator either by building the code or by installing the prebu
 # How To build it : 
 Building from source  : 
 In order to build the codebase in your system you have to make sure you have the essential tools for building cmake projects . 
-    # Required tools : 
-        * [CMAKE](https://cmake.org/) 
-        * C++ Compiler like mingw or clang 
-        * [SFML Library](https://www.sfml-dev.org/)
-        * [VCPKG](https://vcpkg.io/en/) -- For windows .
+*Required tools :* 
+* [CMAKE](https://cmake.org/) 
+* C++ Compiler like mingw or clang 
+* [SFML Library](https://www.sfml-dev.org/)
+* [VCPKG](https://vcpkg.io/en/) -- For windows .
