@@ -5,7 +5,9 @@ it meant to be a project for c++ course and physics course for my Unvirsity "AAU
 *Release page : https://github.com/Obaidah-Jbreel/motion_simulation/releases/tag/c*
 # Building from source  : 
 In order to build the codebase in your system you have to make sure you have the essential tools for building cmake projects 
-Required tools are : 
-    [*] [CMAKE](https://cmake.org/)
+# Required tools : 
+    [*] [CMAKE](https://cmake.org/) 
     [*] C++ Compiler like g++ or clang 
     [*] [SFML Library](https://www.sfml-dev.org/)
+# Optional Tools :
+    [*] [VCPKG](https://vcpkg.io/en/) for windows 
