@@ -1,26 +1,11 @@
 #include "canon.hpp"
 #include "physics.hpp"
+#include "main.hpp" 
+#include "stdlib.h"
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Graphics/PrimitiveType.hpp>
-#include <SFML/Graphics/Vertex.hpp>
 #include <array>
 #include <iostream>
-#include "stdlib.h"
 #include "cmath"
-
-// I made this class to optimize the code , since it was repeated .
-class Label : public sf::Text { 
-public:
-  Label(std::string text = "Text",
-        sf::Vector2f position = sf::Vector2f(0.f, 0.f))
-      : sf::Text() {
-    this->setString(text);
-    this->setCharacterSize(24);
-    this->setFillColor(sf::Color::White);
-    this->setPosition(position);
-  };
-};
 
 // Window dimensions
 float windowS[2] = {1920.0f, 1080.0f};
@@ -60,7 +45,7 @@ int main(int argc, char *input[]) {
   canonD[1] = windowS[1] - (canonD[3] * 512);
 
   sf::RenderWindow window(sf::VideoMode(windowS[0], windowS[1]),"Motion Simulator");
-  window.setFramerateLimit(60);
+  window.setFramerateLimit(144);
   sf::Clock currentClock;
 
 
@@ -122,7 +107,7 @@ int main(int argc, char *input[]) {
       // calculate the angle between canon ball and mouse .
       sf::Vector2i mousePos = sf::Mouse::getPosition(window);
       float dX = mousePos.x - ballInitPosition.x,dY = mousePos.y - ballInitPosition.y;
-      angle = atan2(dY, dX) * (180.f / M_PI);
+      angle = atan2(dY, dX) * (180.f / PI);
       angle = (-angle < 20.f) ? -20.f : angle;
       angle = (-angle > 90.f) ? -90.f : angle;
       anglel.setString("Angle : " + std::to_string((angle < 0.f) ? (int)-angle : (int) (angle + 180.f)) + "");
@@ -148,7 +133,7 @@ int main(int argc, char *input[]) {
       position.y = ballInitPosition.y - position.y + 20;
       targetLine.append(sf::Vertex(position));
       timeOfFlight = timeOfFlight - 0.1;
-      std::cout << position.x << "  ----  " << position.y << std::endl;  
+      // std::cout << position.x << "  ----  " << position.y << std::endl;  
     }
 
     window.draw(headS);
