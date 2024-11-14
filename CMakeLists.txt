@@ -4,15 +4,14 @@ project(MotionSimulator VERSION 1.0
   DESCRIPTION "Simple motion simulation"
 )
 # Setiing some important variables .
-if (WIN32) # Windows only variables .
-  set(SFML_SOURCE_DIR "${VCPKG_DIR}/installed/x86-windows")
-endif()
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 file(GLOB SOURCE_FILES src/*.cpp)
-option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+
+# option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 # look for SFML IN the system .
-find_package(SFML COMPONENTS graphics window system REQUIRED)\
+find_package(SFML COMPONENTS graphics window system REQUIRED)
 
 # Adding sourcecode for compiling .
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
@@ -26,12 +25,22 @@ target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics sfml-window sfml-sys
 #target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 if(WIN32)
-  add_custom_command(
-        TARGET ${PROJECT_NAME}
-        COMMENT "Copy OpenAL DLL"
-        PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/bin/openal32.dll $<TARGET_FILE_DIR:${PROJECT_NAME}>
-        VERBATIM)
+  set(SFML_SOURCE_DIR "${VCPKG_ROOT}/installed/x64-windows")
+
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+      message(STATUS "This is a 64-bit build.")
+  elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+      message(STATUS "This is a 32-bit build.")
+        add_custom_command(
+          TARGET ${PROJECT_NAME}
+          COMMENT "Copy OpenAL DLL"
+          PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/bin/openal32.dll $<TARGET_FILE_DIR:${PROJECT_NAME}>
+          VERBATIM)
+  else()
+      message(STATUS "Unknown pointer size: ${CMAKE_SIZEOF_VOID_P}")
+  endif()
 endif()
+
 # Set the source directory of your data folder
 set(DATA_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets/)
 
